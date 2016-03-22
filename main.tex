@@ -1,0 +1,42 @@
+\documentclass[11pt]{article}
+%Gummi|065|=)
+\title{\textbf{Analysis Techniques for Superalloy Microstructures}}
+\author{Ben Bales}
+\date{}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\graphicspath{ {static/images/} }
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+The goal of this article is to cover a couple techniques developed for analyzing electron back scatter datasets of superalloy microstructures. One of them is an image segmentation technique  One of them is a method for image segmentation specialized for materials that grow via a spinodal decomposition, and the other is an application of histogram of oriented gradients feature vectors for analyzing differences.
+
+\section{Segmentation}
+The traditional approach to analyzing superalloy microstructures is to take EBS micrographs of the samples, label each pixel in the micrograph either $\gamma$ or $\gamma'$ (the segmentation), and then make measurements of the segmented precipitates. The idea is that if a large enough image is taken, or enough images are collected, the statistics of the sample precipitates represents the statistics of the precipitates on the whole sample.
+
+The biggest benefit to this is that these basic geometric measurements (size, aspect ratios, curvatures, etc) are traditionally what people care about in their samples, regardless of if they are approaching the problem from either a thermodynamic or mechanical perspective.
+
+With good segmentations, it's easy to estimate, for instance, the average size of precipitates in a sample, the standard deviation of that distribution, or a standard error in the mean of the distribution.
+
+The trick is to actually get a good segmentation, which is not trivial. Without a good segmentation, there will be large numbers of outliers or significant artifacts in the precipitate shape distributions that make them too difficult to use in any sort of robust way. Even segmenting microstructures by hand can be a lost cause -- it is very difficult to do it with any level of consistency.
+
+There are many successful segmentation algorithms derived over the years in computer vision and statistics. Usually they depend on some sort of basic regularity assumption in the images -- maybe a images are assumed to have no gradients and only flat colors, or maybe images can only take on a few values, or perhaps there are assumptions about the different shapes that things can be in an image. What is unique about microstructure images is that their formation dynamics, the Cahn-Hilliard spinodal decomposition, is actually more or less one of these segmentation algorithms! Feeding an EBS microstructure through a Cahn-Hilliard PDE is an easy way to remove noise from an image produce a fairly good segmentation. As an example, look at Figure Y. The Cahn-Hilliard PDE has the benefit of being closely related to the physics of the underying system.
+
+A quick explanation of the Cahn-Hilliard PDE is in order. The Cahn-Hilliard PDE is derived by minimizing the total system energy in \ref{eq1} using diffusion dynamics (so that the integral of $c$ is conserved through the minimization). There are two basic terms in the Cahn-Hilliard energy \ref{eq1}. The term on the left says that high gradients lead to high system energies, so the steady states of the Cahn-Hilliard system will be largely smooth. The terms on the right say that the $c$ should take the value $-1$ or $1$.
+
+\begin{equation}
+F(c) = \int_{V} \left ( \frac{\gamma}{2}\left | \nabla c \right |^2 + \frac{1}{4} c^4 - \frac{1}{2} c^2 \right ) d v
+\label{eq1}
+\end{equation}
+
+\begin{equation}
+\frac{\partial c}{\partial t} = D \Delta \left ( c^3 - c - \gamma \Delta c \right )
+\label{eq2}
+\end{equation}
+
+\section{Conclusion}
+
+\end{document}
