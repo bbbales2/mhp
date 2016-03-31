@@ -61,7 +61,7 @@
 		W \left( \theta_k \right) = \sum_{\left| \angle f_{ij} - \theta_k \right| < \delta} \left| f_{ij} \right|
 	\end{equation}
 
-	The micrographs used in this report were collected by electron backscatter (EBS) microscopy by members of Tresa Pollock's group at UCSB [cite Luke Rettenberg] [cite Will \& McLean and Tribeam]. The simulated data used later comes from Yunzhi Wang at Ohio State [cite Yunzhi].
+	The micrographs used in this report were collected by electron backscatter (EBS) microscopy by members of Tresa Pollock's group at UCSB [cite Luke Rettenberg] [cite Will \& McLean and Tribeam]. The simulated data used later comes from Y. Wang [cite Yunzhi].
 	
 	\section{Related Work}
 	The classic segmentation-based text on microstructure analysis is [cite]. There are newer microstructure characterization techniques that use N-point statistics [cite], and even sparse keypoint detectors like SIFT and BRIEF [cite].
@@ -136,9 +136,16 @@
 	
 	It may be unsurprising, but it is worth noting that segmentation in 3D datasets is very difficult. All the same problems with 2D data remain, except now visually verifying segmentations can be a real issue due to the difficulty in visualizing 3D data sets (which requires either volume rendering, which is imprecise, or contour plots, which are segmentations in and of themselves).
 
-	A 3D HOG is simply a histogram across two dimensions. There can be artifacts in the histogram due to distortion imposted by gridding the surface of a spherical object. This can be easily corrected for by normalizing the areas of the different bins against each other. Figure XX shows a 3D microstructure along with its corrected histogram. As can be seen there are six strong peaks in this. Figure XX is actually the 3D dataset associated with the image in Figure \ref{figure1}. The clarity of the 3D HOG plot in figure XX hopefully demonstrates the robustness of these feature detectors to noise.
+	A 3D HOG is simply a histogram across two dimensions. There can be artifacts in the histogram due to distortion imposted by gridding the surface of a spherical object. This can be easily corrected for by normalizing the areas of the different bins against each other. Figure \ref{figure4} shows a 3D microstructure along with its corrected histogram. As can be seen there are six strong peaks in this. The clarity of the 3D HOG plot in Figure \ref{figure4} hopefully demonstrates the robustness of these feature detectors to noise.
+	
+	\begin{figure}[!ht]
+  		\centering
+    	\includegraphics[width=0.85\textwidth]{3dhog}
+  		\caption{ $A$ is the 3D HOG descriptor for a 3D EBS dataset $B$ of Rene N4 collected in the Tribeam [cite]. It is the full 3D dataset associated with the image in Figure \ref{figure1}, which hopefully provides convincing evidence that the HOG produces nice results even in the face of large amounts of noise (considerable effort was made to smooth the dataset for the volume rendering in $B$). }
+  		\label{figure4}
+	\end{figure}
 
-	In analogy to the FFTs, it is possible to use rotation invariant spherical harmonics [cite rotation invariant spherical harmonic transform] as feature vectors for analysis of 3D microstructures.
+	In analogy to the FFTs, it is possible to use rotation invariant spherical harmonics [cite rotation invariant spherical harmonic transform] as feature vectors for analysis of 3D microstructures. However, a simpler way to quantify the microstructure was just looking at the mass moments of inertia of the HOG feature descriptor itself (computed as if the HOG were a thin-shelled spherical object with mass given by the value at each histogram point). The moments for the cubic microstructure shown in Figure \ref{figure4} are given in Table \ref{table4}.
 	
     \begin{table}[h]
       \begin{center}
@@ -164,11 +171,32 @@
 	  \end{center}
   	\end{table}
 
-    However, a simpler way to quantify the microstructure was just looking at the mass moments of inertia of the HOG feature descriptor itself (computed as if the HOG were a thin-shelled spherical object with mass given by the value at each histogram point).
+    
+    \begin{table}[h]
+      \begin{center}
+      \begin{tabular}{ c | c | c }
+        \multicolumn{3}{c}{Moments of spherical HOG descriptor} \\
+        \hline
+        $m_1$ & $m_2$ & $m_3$ \\
+        \hline
+        0.33 & 0.33 & 0.34 \\
+        \hline
+      \end{tabular}
+	  \label{table4}
+	  \caption{ These are the moments of the 3D HOG feature descriptor from Figure XX treated as a thin-shell object with mass given by the value of the HOG. The total mass moment of inertia is normalized to 1.0. }
+	  \end{center}
+  	\end{table}
 	
-	For a cubic microstructure, there are six peaks in the HOG feature descriptor and three equivalent primary axis of rotation in the spherical HOG object. For a microstructure rafted into a columnar structure, there are only four strong peaks in the HOG feature detector, and likewise two equivalent axes of rotation with large moments of inertia and a third with a smaller moment. For a microstructure rafted into a layer by layer structure, the HOG feature detector only has two strong peaks and there is a single large moment of inertia and two smaller ones for the spherical HOG object.
+	For a cubic microstructure, there are six peaks in the HOG feature descriptor and three equivalent primary axis of rotation in the spherical HOG object. For a microstructure rafted into a columnar structure, there are only four strong peaks in the HOG feature detector, and likewise two equivalent axes of rotation with large moments of inertia and a third with a smaller moment. For a microstructure rafted into a layer by layer structure, the HOG feature detector only has two strong peaks and there is a single large moment of inertia and two smaller ones for the spherical HOG object. Figure \ref{figure5} shows volume renderings of these two types of rafting that come from simulations done by Wang [cite this]. Table \ref{table3} shows the moment analysis of these experiments.
 	
 	Table \ref{table3} demonstrates these results for some simulated rafting data from [cite Yunzhi].
+	
+	\begin{figure}[!ht]
+  		\centering
+    	\includegraphics[width=0.85\textwidth]{rafting}
+  		\caption{ $A$ is the base microstructure, $B$ is the result of rafting to columns, and $C$ is the result of rafting to layers. }
+  		\label{figure5}
+	\end{figure}
 	
     \begin{table}[h]
       \begin{center}
@@ -195,8 +223,10 @@
 	  \caption{ This is a table of the moments of the 3D HOG feature descriptor treated as a thin-shell object with mass given by the value of the HOG. At each timestep, the scale of the moments are renormalized. In the columnar rafting experiment, the moments slowly transform from all being equal to two smaller moments ($m_1$ and $m_2$) and one large one ($m_3$). In the layered rafting experiment, the moments slowly transform from being similar to one smaller moment ($m_1$) and two larger ones ($m_2$ and $m_3$). Note, the descriptors for the intial conditions are not shown (the moments would all be equal then) [I'm gonna have to figure this out aren't I...]. }
 	  \end{center}
   	\end{table}
-    
-	Another type of analysis that proved useful for the 3D HOGs was looking at the moments of inertia of the HOG object, assuming that the values in the HOG represented mass distributed on a thin-shell sphere. For a cubic microstructure, the HOG has six strong peaks and the three axes of rotation all have equal moments of inertia. A columnar microstructure has four strong peaks, and has large moments of inertia around one axss and then a small value around the two others (Figure X5). Likewise, for layer-by-layer rafting there are only two strong peaks, and the moment of inertia around two axis is much higher than the moment of inertia about the third. Table \ref{table3} shows the applied to simulations of two different types of rafting. The simulation data comes from [cite the Yunzhi Wang paper].
+  	
+	\section{Conclusion}
+	
+	This paper demonstrates that in many types of basic microstructure analysis it is possible to substitute an easy to compute histogram of oriented gradients feature vector in place of difficult to compute segmentation statistics. While the HOG does not have as much information as the segmentation statistics, it is far easier to compute and far more robust to common noise sources in superalloy microscopy techniques.
 
 	\section{Extra text}
 	There are many situations in superalloys experimentation where microstructures must be compared. This might identifying for an unlabeled microstructure whether it is closer to one reference microstructure or another as is done in manufacturing quality control. It could also be comparing microstructure from a stressed sample against a reference original in an attempt to quantify the affect of the stress.
@@ -205,8 +235,6 @@
 
 	As long as it's possible to compute a reasonable gradient approximation, then the HOG can be computed. For EBS images this boils down to being able to apply a light Gaussian blur to the image to avoid incorrect biases from pixel discretizations without damaging the microstructure. This is usually easy.
 
-	\section{Conclusion}
-	
-	This paper demonstrates that in many types of basic microstructure analysis it is possible to substitute an easy to compute histogram of oriented gradients feature vector in place of difficult to compute segmentation statistics. While the HOG does not have as much information as the segmentation statistics, it is far easier to compute and far more robust to common noise sources in superalloy microscopy techniques.
+	Another type of analysis that proved useful for the 3D HOGs was looking at the moments of inertia of the HOG object, assuming that the values in the HOG represented mass distributed on a thin-shell sphere. For a cubic microstructure, the HOG has six strong peaks and the three axes of rotation all have equal moments of inertia. A columnar microstructure has four strong peaks, and has large moments of inertia around one axss and then a small value around the two others. Likewise, for layer-by-layer rafting there are only two strong peaks, and the moment of inertia around two axis is much higher than the moment of inertia about the third. 
 
 \end{document}
