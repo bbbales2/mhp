@@ -121,7 +121,7 @@
 
 	Thus far we have discussed the merits of the HOG as a qualitative feature descriptor. The simplest way to make it quantitative is to look at the magnitude of the FFT of the HOG feature descriptor and compare the relative amount of energy in different harmonics of the microstructure. The first ten bins of the absolute value of the FFTs of the HOG feature descriptors from Figure \ref{figure2} are shown in Table \ref{table1}.
 	
-  	We can compare how circular the two microstructures are by comparing the amount of energy in bin zero of the magnitude of the FFT to all of the other non-zero bins, and we can compare how square the two microstructures are by comparing the energy in every fourth non-zero frequency bin (four and eight highlighted in cyan) to the energy in every other non-zero frequency bin. A similar calculation can be done for 2Hz energies and all the harmonics. This can detect microstructure rafting. These three numbers are a quick way to distill microstructure information and compare images. The calculations for the materials from Figure \ref{figure2} are shown in Table \ref{table5}.
+  	We can compare how circular the two microstructures are by comparing the amount of energy in bin zero of the magnitude of the FFT to all of the other non-zero bins, and we can compare how square the two microstructures are by comparing the energy in every fourth non-zero frequency bin (four and eight highlighted in cyan) to the energy in every other non-zero frequency bin. A similar calculation can be done for 2Hz energies and all the harmonics. This can detect microstructure rafting. These three numbers are a quick way to distill microstructure information and compare images in a rotation invariant way. The calculations for the materials from Figure \ref{figure2} are shown in Table \ref{table5}.
 	
 	\subsection{Detection of Rafting}
 	The merits of HOG feature descriptors are easily demonstrated in the context of a rafting experiment. Figure \ref{figure3} shows two samples of Rene N5, along with plots of their HOG feature vectors. Table \ref{table2} shows the FFT-based scores for the rafted microstructure in a similar to what was shown in Table \ref{table5} for the two F\"ahrmann\cite{faehrmann} samples.
@@ -129,7 +129,7 @@
 	\begin{figure}[!ht]
 		\begin{center}
 			\includegraphics[width=0.85\textwidth]{renehog}
-	  		\caption{ Plot of the HOG feature descriptors of EBS micrographs of a microstructure before (top) and after (bottom) rafting. The rafting is very clear in the HOG feature vector plots. Orientation information of the images is also available in the HOG feature descriptors, but in these experiments rotation invariance is useful. }
+	  		\caption{ Plot of the HOG feature descriptors of EBS micrographs of a microstructure before (top) and after (bottom) rafting. The rafting is very clear in the HOG feature vector plots. }
 	  		\label{figure3}
   		
 			\begin{tabular}{ r | c | c | c }
@@ -163,8 +163,6 @@
 
 	In analogy to the FFTs, it is possible to use rotation invariant spherical harmonics \cite{spherical} as feature vectors for analysis of 3D microstructures. Figure \ref{figure8} along with Table \ref{table3} show the results on a simulated coarsening experiment done by Wang \cite{ywang2}.
 	
-	However, a simpler way to quantify 3D microstructure is to look at the mass moments of inertia of the HOG feature descriptor itself (computed as if the HOG were a thin-shelled spherical object with mass given by the value at each histogram point). The moments for the cubic microstructure shown in Figure \ref{figure4} are given in Table \ref{table3}.
-	
 	\begin{figure}[!ht]
     	\begin{center}
 			\includegraphics[width=0.85\textwidth]{coarsening}
@@ -193,9 +191,7 @@
 		\end{center}
 	\end{figure}
 	
-	For a cubic microstructure, there are six peaks in the HOG feature descriptor and three equivalent primary axis of rotation in the spherical HOG object. For a microstructure rafted into a columnar structure, there are only four strong peaks in the HOG feature detector, and likewise two equivalent axes of rotation with large moments of inertia and a third with a smaller moment. For a microstructure rafted into a layer by layer structure, the HOG feature detector has only two strong peaks and there is a single large moment of inertia and two smaller ones for the spherical HOG object. Figure \ref{figure5} shows volume renderings of these two types of rafting that come from simulations done by Wang \cite{ywang2}. Table \ref{table3} shows the moment analysis of these experiments.
-	
-	Table \ref{table3} demonstrates these results for simulated rafting data from \cite{ywang2}.
+	However, a simpler way to quantify 3D microstructure is to look at the mass moments of inertia of the HOG feature descriptor itself (computed as if the HOG were a thin-shelled spherical object with mass given by the value at each histogram point).% The moments for the cubic microstructure shown in Figure \ref{figure4} are given in Table \ref{table3}.
 	
 	\begin{figure}[!ht]
 		\begin{center}
@@ -227,6 +223,10 @@
 		\end{center}
 	\end{figure}
   	
+	For a cubic microstructure, there are six peaks in the HOG feature descriptor and three equivalent primary axis of rotation in the spherical HOG object. For a microstructure rafted into a columnar structure, there are only four strong peaks in the HOG feature detector, and likewise two equivalent axes of rotation with large moments of inertia and a third with a smaller moment. For a microstructure rafted into a layer by layer structure, the HOG feature detector has only two strong peaks and there is a single large moment of inertia and two smaller ones for the spherical HOG object. Figure \ref{figure5} shows volume renderings of these two types of rafting that come from simulations done by Wang \cite{ywang2}. Table \ref{table6} shows the moment analysis of these experiments.
+	
+	Table \ref{table6} demonstrates the results of moment computation on the simulated rafting data in Figure \ref{figure5}.
+	
 	\section{Conclusion}
 	
 	This paper demonstrates that in many types of basic microstructure analysis it is possible to substitute an easy to compute histogram of oriented gradients feature vector in place of difficult to compute segmentation statistics. While the HOG does not include as much information as the segmentation statistics, it is far easier to compute and far more robust to common noise sources in superalloy microscopy techniques.
