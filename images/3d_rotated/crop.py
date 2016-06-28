@@ -2,7 +2,7 @@
 import numpy
 import skimage.io
 
-images = ['t0_coarsening.png', 't2_coarsening.png', 't7_layers.png', 't0_rafting.png', 't7_columns.png', 't8_coarsening.png']
+images = ['t0_coarsening.png', 't2_coarsening.png', 'te_rafting.png', 't0_rafting.png', 'te_columnar.png', 't9_coarsening.png']
 x, y = 375, 118
 dx = 732
 

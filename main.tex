@@ -165,7 +165,7 @@
   		\label{figure4}
 	\end{figure}
 
-	In analogy to the FFTs, it is possible to use rotation invariant spherical harmonics \cite{spherical} as feature vectors for analysis of 3D microstructures. Figure \ref{figure8} along with Table \ref{table3} show the results on a simulated coarsening experiment done by Wang \cite{ywang2}. In this analysis the Cube descriptor comes from looking at every fourth non-zero frequency bin of the rotation invarient spherical harmonics, and the Sphere descriptor comes from looking at the energy in the zeroth bin compared to everything else. Spherical harmonics are more difficult to work with than simple FFTs though, so it is not quite as easy.
+	In analogy to the FFTs, it is possible to use rotation invariant spherical harmonics \cite{spherical} as feature vectors for analysis of 3D microstructures. Figure \ref{figure8} along with Table \ref{table3} show the results on a simulated coarsening experiment done by Wang \cite{ywang2}. In this analysis the Cube descriptor comes from looking at every fourth non-zero frequency bin of the rotation invarient spherical harmonics, and the Sphere descriptor comes from looking at the energy in the zeroth bin compared to everything else. In the coarsening experiment in Table \ref{table3}, the ``Cube`` score remains relatively stable compared to the ``Sphere`` descriptor which drops precipitously. This can be explained by thinking about the precipitate edge curvature remaining constand while the edge lengths increase. The precipitates are cuboids through the whole process, they are just becoming less and less spherical.
 	
 	\begin{figure}[!ht]
     	\begin{center}
@@ -227,11 +227,11 @@
 		\end{center}
 	\end{figure}
   	
-	For a cubic microstructure, there are six peaks in the HOG feature descriptor and three equivalent primary axis of rotation in the spherical HOG object. For a microstructure rafted into a columnar structure, there are only four strong peaks in the HOG feature detector, and likewise two equivalent axes of rotation with large moments of inertia and a third with a smaller moment. For a microstructure rafted into a layer by layer structure, the HOG feature detector has only two strong peaks and there is a single large moment of inertia and two smaller ones for the spherical HOG object. Figure \ref{figure5} shows volume renderings of these two types of rafting that come from simulations done by Wang \cite{ywang2}. Table \ref{table6} shows the moment analysis of these experiments.
+	For a cubic microstructure, there are six peaks in the HOG feature descriptor and three equivalent primary axis of rotation in the spherical HOG object. For a microstructure rafted into a columnar structure, there are only four strong peaks in the HOG feature detector, and likewise two equivalent axes of rotation with large moments of inertia and a third with a smaller moment. For a microstructure rafted into a layer by layer structure, the HOG feature detector has only two strong peaks and there is a single large moment of inertia and two smaller ones for the spherical HOG object. Figure \ref{figure5} shows volume renderings of these two types of rafting that come from simulations done by Wang \cite{ywang2}. Table \ref{table6} shows the moment analysis of these experiments which reflects the behavior described above.
 	
 	\section{Conclusion}
 	
-	This paper demonstrates that in many types of basic microstructure analysis it is possible to substitute an easy to compute histogram of oriented gradients feature vector in place of difficult to compute segmentation statistics. While the HOG does not include as much information as the segmentation statistics, it is easy to compute and is more robust to common noise sources in superalloy microscopy techniques.
+	This paper demonstrates that in many types of basic microstructure analysis it is possible to substitute an easy to compute histogram of oriented gradients feature vector in place of difficult to compute segmentation statistics. While the HOG has limitations, it is easy to compute and is more robust to common noise sources in superalloy microscopy techniques and can be applied in a number of interesting applications.
 	
 	\section{Acknowledgements}
 	

@@ -22,10 +22,11 @@ os.chdir(folder)
 #             'images/r5_rupture.png'
 #
 ims2 = []
-for path in ['images/molybdenum1.png',
-             'images/molybdenum3.png']:
-#'images/r5_0pct.png',
-#             'images/r5_2pct.png']:
+for path in ['images/r5_0pct.png',
+             'images/r5_2pct.png']:
+#'images/molybdenum1.png',
+#             'images/molybdenum3.png'
+#]:
              #
              #'images/rene88_2.png',
              #'images/renen4_2.png'
@@ -101,6 +102,8 @@ for i, filtrd in enumerate(filtrd_ims[:]):
     histograms.append([angles, histogram])
     histograms2.append([angles2, histogram2])
 #%%
+import matplotlib_scalebar.scalebar
+
 fig = plt.figure()
 
 ax1 = plt.subplot(222)
@@ -123,16 +126,25 @@ ax3.set_yticklabels([])
 
 ffts = numpy.array(ffts)
 cs = numpy.array(cs)
-ax3.legend(['Square (Top)', 'Circular (Bottom)'], loc = [0.75, 0.90])
-fig.set_size_inches((8, 4.5))
-plt.savefig('{0}/images/mollyhog.png'.format(folder, i), format='png', dpi = 150, bbox_inches='tight', pad_inches=0)
-plt.show()
-#%%
 
+scale1 = matplotlib_scalebar.scalebar.ScaleBar(0.029411765e-6)
+scale2 = matplotlib_scalebar.scalebar.ScaleBar(0.029585799e-6)
+ax1.add_artist(scale1)
+ax2.add_artist(scale2)
 ax3.legend(['Base (Top)', 'Rafted (Bottom)'], loc = [0.60, 0.95])
 fig.set_size_inches((6.5, 4.5))
-plt.savefig('{0}/images/renehog.png'.format(folder, i), format='png', dpi = 150, bbox_inches='tight', pad_inches=0.1)
+plt.savefig('{0}/images/renehog.png'.format(folder, i), format='png', dpi = 150, bbox_inches='tight', pad_inches = 0.1)
 plt.show()
+#%%
+scale1 = matplotlib_scalebar.scalebar.ScaleBar(0.713383066e-9)
+scale2 = matplotlib_scalebar.scalebar.ScaleBar(0.726487743e-9)
+ax1.add_artist(scale1)
+ax2.add_artist(scale2)
+ax3.legend(['Square (Top)', 'Circular (Bottom)'], loc = [0.75, 0.90])
+fig.set_size_inches((8, 4.5))
+plt.savefig('{0}/images/mollyhog.png'.format(folder, i), format='png', dpi = 150, bbox_inches='tight', pad_inches = 0.1)
+plt.show()
+#%%
 #%%
 
 for im, (angles, histogram) in zip(ims2, histograms[:]):
