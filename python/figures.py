@@ -5,6 +5,7 @@ import skimage.filters
 import os
 import mahotas
 import numpy
+import matplotlib_scalebar.scalebar
 
 # Get path to current script
 folder = '/home/bbales2/microstructure_hog_paper/'
@@ -78,9 +79,11 @@ plt.imshow(imr4, interpolation = 'None', cmap = plt.cm.gray)
 plt.imshow(numpy.ma.masked_where(mark < 0.1, mark), interpolation = 'None', cmap = plt.cm.gray)
 plt.tight_layout()
 ax = plt.gca()
+scale = matplotlib_scalebar.scalebar.ScaleBar(0.00667572e-6)
+ax.add_artist(scale)
 ax.get_xaxis().set_visible(False)
 ax.get_yaxis().set_visible(False)
-plt.savefig('{0}/images/renen4otsuBorders_noblur.png'.format(folder), format='png', dpi = 150, bbox_inches='tight', pad_inches=0)
+plt.savefig('{0}/images/renen4otsuBorders_noblur.png'.format(folder), format='png', dpi = 73, bbox_inches='tight', pad_inches=0)
 
 #%%
 print numpy.mean(imr4[:, :imr4.shape[1] / 2])
