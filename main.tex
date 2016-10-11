@@ -25,7 +25,7 @@
 		\address[mat]{Materials Department, Engineering II Building, 1355 University of California, Santa Barbara, Santa Barbara, CA 93106-5050}
 
 		\begin{abstract}
-		Segmentation based image analysis techniques are routinely employed for quantitative analysis of complex microstructures containing two or more phases.  The primary advantage of these approaches are that spatial information on the distribution of phases is retained, enabling subjective judgements of the quality of the segmentation and subsequent analysis process. The downside is that computing micrograph segmentations with data in morphologically complex microstructures gathered with error-prone detectors is challenging and, if no special care is taken, the artifacts of the segmentation will make any subsequent analysis and conclusions uncertain. In this paper we demonstrate, using a two phase nickel-base superalloy microstructure as a model system, a new approach to analysis of precipitate shapes using a segmentation-free approach based on the histogram of oriented gradients approach.  The benefits of this approach for analysis of microstructure in two and three dimensions are demonstrated. This work is driven by the histogram of oriented gradiends feature descriptor (HOG), a classic tool in image analysis \cite{gradtex, hog, girsh}.
+		Segmentation based image analysis techniques are routinely employed for quantitative analysis of complex microstructures containing two or more phases.  The primary advantage of these approaches are that spatial information on the distribution of phases is retained, enabling subjective judgements of the quality of the segmentation and subsequent analysis process. The downside is that computing micrograph segmentations with data in morphologically complex microstructures gathered with error-prone detectors is challenging and, if no special care is taken, the artifacts of the segmentation will make any subsequent analysis and conclusions uncertain. In this paper we demonstrate, using a two phase nickel-base superalloy microstructure as a model system, a new methodology for analysis of precipitate shapes using a segmentation-free approach based on the histogram of oriented gradients  feature descriptor (HOG), a classic tool in image analysis \cite{gradtex, hog, girsh}. The benefits of this methodology for analysis of microstructure in two and three dimensions are demonstrated.
 		\end{abstract}
 
 		\begin{keyword}
@@ -36,36 +36,34 @@
 	\section{Introduction}
 		The strong driving force for development of rigorous property models for structural materials motivates quantitative analysis of microstructure across a spectrum of alloy systems \cite{echlinlenthe}. Since most engineering materials are multiphase in character, it is usually essential to isolate individual phases for analysis of size, shape and/or distribution in order to input this information into property models. The process for quantifying microstructure typically involves collection of 2D or 3D data on a pixel by pixel basis, followed by a segmentation operation to isolate individual phases within the microstructure. Shape metrics such as volumes, surface areas, or statistical moments \cite{twoDM, threeDM}) of the resulting precipitates are used to quantify the analysis. These metrics are chosen in part because of their similarity with how quantitative microstructure analysis has been performed manually \cite{sluytman, underwood}. The conjecture is that if enough micrographs can be captured and enough precipitates can be characterized, the shape statistics will yield good feature descriptors that can then be used in whatever classification or regression tasks that need to be addressed.
 		
-		The examples in this paper are of nickel-based superalloys. For these alloys, it is desirable to develop heat treatment cycles to adjust precipitate shapes for optimization of mechanical properties \cite{sluytman}. A unique feature of this class of alloys is the tendency for the precipitates to undergo directional coarsening during the application of external stresses at elevated temperatures \ref{pollock2006}, a process known as "rafting". In both cases, measuring the shape of the microstructural precipitates can be very useful.
+		The examples in this paper are of nickel-based superalloys. For these alloys, it is desirable to develop heat treatment cycles to adjust precipitate shapes for optimization of mechanical properties \cite{sluytman}. A unique feature of this class of alloys is the tendency for the precipitates to undergo directional coarsening during the application of external stresses at elevated temperatures \cite{pollock2006}, a process known as "rafting". In both cases, measuring the shape of the microstructural precipitates can be very useful.
 
-		The problem with this is that the segmentations are rarely trivial. Especially across data sets, but even within datasets, it can be very difficult to parameterize a segmentation algorithm to produce consistent results. Because the segmentation parameterization can strongly influence the shape statistics and because producing high quality segmentation frequently requires extensive fine tuning of segmentation parameters, it is difficult to argue that the resultant shape statistics are unbiased (with regards to the segmentation). The artifacts an automated segmentation of a g - g' microstructure might produce depend on the imaging modality, but typically include:
+		The problem with this measurement is that the segmentations are rarely trivial. Especially across data sets, but even within datasets, it can be very difficult to parameterize a segmentation algorithm to produce consistent results. Because the segmentation parameterization can strongly influence the shape statistics and because producing high quality segmentation frequently requires extensive fine tuning of segmentation parameters, it is difficult to argue that the resultant shape statistics are unbiased (with regards to the segmentation). The artifacts an automated segmentation of a g - g' microstructure might produce depend on the imaging modality, but typically include:
 
 		\begin{enumerate}
-			\item \label{prob1} A large number of single pixel $\gamma$ or $\gamma'$ precipitates appear due to detector noise in the original image
-			\item Individual precipitates are merged into one large precipitate because the original image does not have high enough resolution for them to be segmented without high level material-specific knowledge
+			\item \label{prob1} A large number of single pixel $\gamma$ or $\gamma'$ precipitates appear due to detector noise in the original image.
+			\item Individual precipitates are merged into one large precipitate because the original image does not have high enough resolution for them to be segmented without high level material-specific knowledge.
 		\end{enumerate}
 	
 		\begin{figure}[!ht]
 	  		\centering
 			\includegraphics[width=0.5\textwidth]{renen4}
-	  		\caption{ This is an example backscatter electron micrograph. $A$, $B$, and $B'$ all highlight typically difficult regions to segment. $A$ shows four precipitates that have been incorrectly merged by the segmentation algorithm. $B$ and $B'$ highlight areas where maybe there is a precipitate and maybe there isn't. In both cases the segmentation algorithm must make the decision between these two extremes. The choice is not obvious, and segmentation algorithms struggle. }
+	  		\caption{ This is an example backscatter electron micrograph. $A$, $B$, and $B'$ all highlight typically difficult regions to segment. $A$ shows four precipitates that have been incorrectly merged by the segmentation algorithm. $B$ and $B'$ highlight areas where maybe there is a precipitate and maybe there isn't. In both cases the segmentation algorithm must make a decision between these two extremes. The choice is not obvious, and segmentation algorithms struggle. }
 	  		\label{figure1}
 		\end{figure}
 
-		Figure \ref{figure1} shows an example image with the first two types of defects. These types of issues are not unique to superalloy microstructures, and techniques can be developed to address them \cite{comer, marc1, marc2, marc3}, though it is still very difficult to make them robust in any way, particularly across data sets. The simpler solution, if the information needed and the associated analysis allows, is to employ image analysis approaches that do not rely on segmentation.
+		Figure \ref{figure1} shows an example image with the first two types of defects. These issues are not unique to superalloy microstructures, and techniques can be developed to address them \cite{comer, marc1, marc2, marc3}, though it is still very difficult to make them robust, particularly across data sets. The simpler solution, if the information needed and the associated analysis allows, is to employ image analysis approaches that do not rely on segmentation.
 	
 		% Segmentation techniques are merely a holdover from how image analysis was done before computers.
 
-		The goal of this paper is to highlight how a tool from computer vision, the Histogram of Oriented Gradients (HOG) feature detector, can be used to solve a wide variety of relevant classification and measurement problems robustly to the problems enumerated above. HOG feature detectors have a long, rich history of application in computer vision \cite{gradtex, hog, girsh}, but to the best of our knowledge have not been used in the study of microstructure.
+		The goal of this paper is to highlight how a tool from computer vision, the Histogram of Oriented Gradients (HOG) feature detector, can be used to solve a wide variety of relevant classification and measurement problems robustly with respect to the difficulties enumerated above. HOG feature detectors have a long, rich history of application in computer vision \cite{gradtex, hog, girsh}, but to the best of our knowledge have not been used in the study of microstructure.
 
-		This paper is organized as follows. In Section \ref{relatedwork} we describe related work and in Section \ref{methodsandmaterials} we outline computation of a HOG feature descriptor. Finally in Section \ref{hog} we will demonstrate the effectiveness of the HOG feature descriptor a number of relevent microstructure characterization problems, where microstructural information is available in both 2D and 3D.
+		This paper is organized as follows. In Section \ref{relatedwork} we describe related work and in Section \ref{methodsandmaterials} we outline computation of a HOG feature descriptor. In Section \ref{hog} we demonstrate the effectiveness of the HOG feature descriptor on a number of relevent microstructure characterization problems, where microstructural information is available in both 2D and 3D.
 	
 	\section{Related Work}\label{relatedwork}
 		There is an extensive existing literature on microstructure analysis including understanding how composition effects microstructure \cite{stin2000} \cite{faehrmann}, understanding how processing steps effect microstructure \cite{gabb2011}, and understanding how precipitate shape properties effect strength \cite{sluytman}, etc. Most of these papers use segmentation based characterization techniques, be they measuring simple areas, aspect ratios, and perimeters \cite{underwood} or more complicated metrics \cite{twoDM, threeDM}.
 		
-		There are many similarities between microstructure analysis and the classic problem of shape analysis \cite{stegmann} \cite{belongie}. Shape analysis in a vaccuum is taking outlines of objects and doing something with that information. The motivation might be pose estimation \cite{stegmann} or simple object recognition\cite{belongie}. A frequent limitation in this process was, much like for the microstructures, getting the outlines of the objects. The outlining is simply a segmentation, albeit usually a much more complicated one than superalloy microstructures require. This field took a leap forward as techniques were developed to solve the motivating problems directly (pose estimation, object recognition, etc.), without first doing a segmentation. Even though the idea of a segmentation as a blackbox step in shape analysis seemed reasonable, it was limiting. These changes were fueled by the introduction the Scale-Invariant Feature Transforms (SIFT) \cite{sift} for sparse keypoint identification and the repopularization of HOG descriptors by Dalal and Triggs \ref{dalaltriggs}.
-		
-		The inspiration to this work was the success that shape analysis enjoyed with these segmentation-free feature descriptors.
+		There are many similarities between microstructure analysis and the classic problem of shape analysis \cite{stegmann} \cite{belongie}. Shape analysis in a vaccuum is taking outlines of objects and doing something with that information. The motivation might be pose estimation \cite{stegmann} or simple object recognition\cite{belongie}. A frequent limitation in this process was, much like for the microstructures, obtaining the outlines of the objects. Outlining is simply a segmentation, albeit usually a much more complicated one than superalloy microstructures require. This field took a leap forward as techniques were developed to solve the motivating problems directly (pose estimation, object recognition, etc.), without first doing a segmentation. Even though the idea of a segmentation as a blackbox step in shape analysis seemed reasonable, it was limiting. These changes were fueled by the introduction the Scale-Invariant Feature Transforms (SIFT) \cite{sift} for sparse keypoint identification, the repopularization of HOG descriptors by Dalal and Triggs \cite{dalaltriggs}, and, more currently, work in neural networks \cite{alex}. The inspiration to our current work was the success that shape analysis enjoyed with these segmentation-free feature descriptors.
 
 		There actually are recent microstructure characterization techniques that are segmentation-free, making use of N-point statistics \cite{kalidindi1, kalidindi2} and SIFT \cite{decost}. What, given the established application of N-point statistics and SIFT in microstructure analysis do HOG descriptors provide? Basically, while a quantitative, segmentation-free feature vector is desired, it is also desirable that the feature vectors be easily interpretable by the lab scientists. The strength of a segmentation is that the data it produces (the outlines of the precipitates) is easy to directly interpret and understand. Our goal has been to develop a technique that makes both of these scenarios possible: quantitative analysis similar to the N-point statistics and SIFT features, and qualitative analysis similar to that done with segmentations. HOG descriptors, as used here, fill that gap. Their computation, interpretation, and analysis are straightforward.
 	
@@ -74,7 +72,7 @@
 		%Our goal has been to identify and technique for microstructure analysis that works qualitatively and quantitatively. Segmentation analysis fails on the quantitative part, and SIFT-like descriptors fail on the qualitative part. N-point statistics can be interpretted directly, but they have the nasty habit of making large data larger. Their direct human interpretation is limited, even when this data explosion can be handled by a computer.
 
 	\section{Methods}\label{methodsandmaterials}
-		Computation of the histogram of oriented gradients feature descriptor itself is straight forward. This technique is suitable for either standard scanning or tunneling electron microscope micrographs. The HOG feature detector is relatively coarse, and so the micrograph only needs to be of modest size, practically somewhere between 200x200 and 1000x1000 pixels. First, an approximate gradient at every point in the image is computed. This is most easily done by applying a light gaussian blur (just a couple pixel radius) to the image and taking finite differences. The Gaussian kernel should be large enough to remove the largest detector noise, but not enough to blur any important features. Finally, the values of the gradient are summed into a histogram of gradient angles weighted by gradient magnitudes.
+		Computation of the HOG feature descriptor itself is straightforward. This technique is suitable for either standard scanning or tunneling electron microscope micrographs. The HOG feature detector is relatively coarse, and so the micrograph only needs to be of modest size, practically somewhere between 200x200 and 1000x1000 pixels. First, an approximate gradient at every point in the image is computed. This is most easily done by applying a light Gaussian blur (just a few pixel radii) to the image and taking finite differences to obtain the gradients. The Gaussian kernel should be large enough to remove the largest detector noise, but not so large that it blurs any important features. Finally, the values of the gradient are summed into a histogram of gradient angles weighted by gradient magnitudes.
 
 		For image $F$ with Gaussian kernel $G$, the gradient at each point, $f_{ij}$, is given by $\nabla \left( G \ast F \right)_{ij}$. $f_{ij}$ is a vector with magnitude $\left| f_{ij} \right|$ and angle $\angle f_{ij}$. To build the histogram over angles, if each bin center is denoted as $\theta_k$ with radius $\delta$, then the value of the histogram $W$ at that bin center is given by
 
@@ -132,7 +130,7 @@
 	Taking a step back, even though the microstructures in Figure \ref{figure2} appear to be simple squares and circles, the microstructure samples themselves are 3D objects. It is possible, for instance, that if the top sample was cut on an angle the HOG plot would have more or less peaks due to symmetry and the sectioning plane.
 	 
 	\subsection{Detection of Rafting}
-	The merits of HOG feature descriptors are easily demonstrated in the context of nickel-based superalloys for rafting, a unique tendency in this class of alloys for the precipitates to directionally coarsen during application of stresses at elevated temperatures \ref{pollock2006}. Figure \ref{figure3} shows two samples of Rene N5, one unrafted (top) and one rafted (bottom) along with plots of their HOG feature vectors. Table \ref{table2} shows the FFT-based scores for the rafted microstructure. The biggest change in score from the top (unrafted) microstructure to the bottom (rafted) one is the amount of energy in 4hz harmonics. The top microstructure has a large fraction of energy there, and the bottom microstructure has basically none.
+	The merits of HOG feature descriptors are easily demonstrated in the context of nickel-based superalloys for rafting, a unique tendency in this class of alloys for the precipitates to directionally coarsen during application of stresses at elevated temperatures \cite{pollock2006}. Figure \ref{figure3} shows two samples of Rene N5, one unrafted (top) and one rafted (bottom) along with plots of their HOG feature vectors. Table \ref{table2} shows the FFT-based scores for the rafted microstructure. The biggest change in score from the top (unrafted) microstructure to the bottom (rafted) one is the amount of energy in 4hz harmonics. The top microstructure has a large fraction of energy there, and the bottom microstructure has basically none.
 	
 	\begin{figure}[!ht]
 		\begin{center}
@@ -141,7 +139,7 @@
 	  		\label{figure3}
   		
 			\begin{tabular}{ r | c | c | c }
-				\multicolumn{4}{c}{Simple HOG Scores for Figure \ref{figure3}} \\
+				\multicolumn{4}{c}{\textbf{Simple HOG Scores for Figure \ref{figure3}}} \\
 				\hline
 				& \shortstack{Circle \\ (0Hz signal)} & \shortstack{Square \\ (4Hz harmonics)} & \shortstack{Layering \\ (2Hz harmonics)} \\
 				\hline
@@ -154,7 +152,6 @@
 	  		\label{table2}
 		\end{center}
 	\end{figure}
-	
 	\subsection{Analysis of 3D Transformations}
 	HOG descriptors easily transfer to 3D datasets as well. While not as extensively deployed as their 2D counterparts, these feature detectors have found practical use in video datasets for action recognition (two spatial dimensions and one time dimension) \cite{hog3d1}. Again, in this application, they enable microstructure analysis without segmentation.
 
@@ -169,7 +166,7 @@
   		\label{figure4}
 	\end{figure}
 
-	In analogy to the FFTs, it is possible to use rotation invariant spherical harmonics \cite{spherical} as feature vectors for analysis of 3D microstructures. Figure \ref{figure8} along with Table \ref{table3} show the results on a simulated coarsening experiment done by Wang \cite{ywang2}. The first descriptor in Table \ref{table3} (``Cube'') comes from looking at every fourth non-zero frequency bin of the rotation invarient spherical harmonics, and second descriptor (``Sphere'') comes from looking at the energy in the zeroth bin compared to everything else. The ``Cube`` score remains relatively stable compared to the ``Sphere`` descriptor which drops precipitously. This can be explained by thinking about the precipitate edge curvature remaining constant while the edge lengths increase. The precipitates are cuboids through the whole process, they are just becoming less and less spherical as the microstructure coarsens.
+	In analogy to the FFTs, it is possible to use rotation invariant spherical harmonics \cite{spherical} as feature vectors for analysis of 3D microstructures. Figure \ref{figure8} along with Table \ref{table3} show the results on a simulated coarsening experiment done by Wang \cite{ywang2}. The first descriptor in Table \ref{table3} (``Cube'') comes from looking at every fourth non-zero frequency bin of the rotation invarient spherical harmonics, and second descriptor (``Sphere'') comes from looking at the energy in the zeroth bin compared to everything else. The ``Cube`` score remains relatively stable compared to the ``Sphere`` score which drops precipitously. This can be explained by thinking about the precipitate edge curvature remaining constant while the edge lengths increase. The precipitates are cuboids through the whole process, they are just becoming less and less spherical as the microstructure coarsens.
 	
 	\begin{figure}[!ht]
     	\begin{center}
@@ -178,7 +175,7 @@
 	  		\label{figure8}
   		
 			\begin{tabular}{ c | c | c }
-				\multicolumn{3}{c}{Coarsening experiment} \\
+				\multicolumn{3}{c}{\textbf{Coarsening experiment}} \\
 				\hline
 				Timestep & Cube & Sphere \\
 				\hline
@@ -236,7 +233,7 @@
 	  		\label{figure5}
 	  		
 			\begin{tabular}{ c | c | c | c || c | c | c }
-				\multicolumn{7}{c}{Moments for HOGs of rafted microstructures} \\
+				\multicolumn{7}{c}{\textbf{Moments for HOGs of rafted microstructures}} \\
 				\hline
 				& \multicolumn{3}{c ||}{Columnar rafting} & \multicolumn{3}{ c}{Layered-by-layer rafting} \\
 				\hline
